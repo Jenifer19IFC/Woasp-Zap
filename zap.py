@@ -5,6 +5,9 @@ import time, sys
 # Cria uma instância do ZAPv2 config. para usar o ZAP Proxy rodando na URL digitada
 zap = ZAPv2(proxies={'http': 'http://localhost:8061/'}) # Ex: http://localhost:8061/
 
+# Limpa a sessão p/ evitar dados acumulados de execuções anteriores
+zap.core.new_session(name=None, overwrite=True)
+
 # Verifica se foram passados 2 argumentos (nome do script e o alvo)
 if len(sys.argv) != 2:
     print('Passagem de argumentos insuficientes!')
