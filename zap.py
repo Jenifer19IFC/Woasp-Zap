@@ -3,7 +3,7 @@ from pprint import pprint
 import time, sys
 
 # Cria uma instância do ZAPv2 config. para usar o ZAP Proxy rodando na URL digitada
-zap = ZAPv2(proxies={'http': 'url_servidor_zap'}) # Ex: http://localhost:8061/
+zap = ZAPv2(proxies={'http': 'http://localhost:8061/'}) # Ex: http://localhost:8061/
 
 # Verifica se foram passados 2 argumentos (nome do script e o alvo)
 if len(sys.argv) != 2:
@@ -19,6 +19,9 @@ try:
 except Exception as e:
     print(f'Não foi possível estabelecer uma conexão com o alvo {alvo} ==> {e}')
     sys.exit(1)
+
+# Tempo de início
+inicio = time.time()
 
 # Inicia o processo de "spidering" (raspagem/mapeamento de links) no alvo 
 id_escaneamento = zap.spider.scan(alvo)
@@ -42,12 +45,19 @@ while int(zap.ascan.status(id_escaneamento)) < 100:
 print('Varredura conluída!')
 print('\nHosts encontrados: ' + ', '.join(zap.core.hosts)) 
 
+# Tempo de fim
+fim = time.time()
+
+# Calcula duração do tempo
+tempo_total = (fim - inicio)/60
+print(f'\nTempo total do processo: {tempo_total:.2f} min')
+
 #print('\nAlertas de segurança:')
 #pprint(zap.core.alerts())
 
 # Gera relatório HTML com os resultados
 html = zap.core.htmlreport()
-with open('report_file.html', 'w') as f:
+with open('relatorio.html', 'w') as f:
     f.write(html)
 
 print('\nRelatório gerado com sucesso!')
