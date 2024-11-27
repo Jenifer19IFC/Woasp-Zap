@@ -27,29 +27,32 @@ except Exception as e:
 inicio = time.time()
 
 # Inicia o processo de "spidering" (raspagem/mapeamento de links) no alvo 
-id_escaneamento = zap.spider.scan(alvo)
+id_spider = zap.spider.scan(alvo)
 time.sleep(2)
 
 # Aguarda processo de 'spidering' ser concluído
-while int(zap.spider.status(id_escaneamento)) < 100:
-    print('Mapeamento em ' + str(zap.spider.status(id_escaneamento)) + '%...') # SPIDER
+while int(zap.spider.status(id_spider)) < 100:
+    print('Mapeamento em ' + str(zap.spider.status(id_spider)) + '%...') # SPIDER
     time.sleep(2)
 print('Mapeamento concluído!')
 time.sleep(5)
 
 print('\nEscaneando alvo %s' % alvo)
 # Inicia o processo de varredura de segurança
-id_escaneamento = zap.ascan.scan(alvo)
+id_varredura = zap.ascan.scan(alvo)
 
 # Aguarda varredura de segurança ativa ser concluída 
-while int(zap.ascan.status(id_escaneamento)) < 100:
-    print('Varredura em ' + str(zap.ascan.status(id_escaneamento)) + '%...')
+while int(zap.ascan.status(id_varredura)) < 100:
+    print('Varredura em ' + str(zap.ascan.status(id_varredura)) + '%...')
     time.sleep(5)
 print('Varredura conluída!')
 print('\nHosts encontrados: ' + ', '.join(zap.core.hosts)) 
 
 # Tempo de fim
 fim = time.time()
+
+zap.spider.stop(id_spider)
+zap.ascan.stop(id_varredura)
 
 # Calcula duração do tempo
 tempo_total = (fim - inicio)/60
@@ -60,7 +63,7 @@ print(f'\nTempo total do processo: {tempo_total:.2f} min')
 
 # Gera relatório HTML com os resultados
 html = zap.core.htmlreport()
-with open('relatorio.html', 'w') as f:
+with open('teste.html', 'w') as f:
     f.write(html)
 
 print('\nRelatório gerado com sucesso!')
